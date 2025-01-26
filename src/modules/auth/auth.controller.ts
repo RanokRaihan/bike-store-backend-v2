@@ -1,11 +1,18 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { jwt_expires_in, jwt_secret } from "../../config";
+import {
+  jwt_access_secret,
+  jwt_expires_in,
+  jwt_refresh_expires_in,
+  jwt_refresh_secret,
+  node_env,
+} from "../../config";
 import ApiError from "../../errors/ApiError";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { createToken } from "../../utils/createToken";
 import { sendResponse } from "../../utils/sendResponse";
 import { findUserWithEmailService } from "../user/user.service";
+import { SignOptions } from "./../../../node_modules/@types/jsonwebtoken/index.d";
 import { IjwtPayload, TUserRole } from "./auth.interface";
 
 export const loginUserController = asyncHandler(
@@ -29,11 +36,23 @@ export const loginUserController = asyncHandler(
     };
     const accessToken = createToken(
       jwtPayload,
-      jwt_secret as string,
-      jwt_expires_in as string
+      jwt_access_secret as string,
+      jwt_expires_in as SignOptions["expiresIn"]
     );
+    const refreshToken = createToken(
+      jwtPayload,
+      jwt_refresh_secret as string,
+      jwt_refresh_expires_in as SignOptions["expiresIn"]
+    );
+    res.cookie("refreshToken", refreshToken, {
+      secure: node_env === "production",
+      httpOnly: true,
+      sameSite: node_env === "production" ? "none" : "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+      path: "/",
+    });
 
     // send the token as response
-    sendResponse(res, 200, "Login successful", { token: accessToken });
+    sendResponse(res, 200, "Login successful", { accessToken });
   }
 );

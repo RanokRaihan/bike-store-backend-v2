@@ -9,7 +9,7 @@ const userSchema = new Schema<IUser>(
       trim: true,
       validate: {
         validator: (value: string) => value.trim().length > 0,
-        message: "Name cannot be empty",
+        message: "Name cannot be empty!",
       },
     },
     email: {
@@ -17,6 +17,13 @@ const userSchema = new Schema<IUser>(
       required: true,
       unique: true,
       trim: true,
+      validate: {
+        validator: (value: string) => {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(value);
+        },
+        message: "Invalid email format!",
+      },
     },
     password: {
       type: String,
@@ -29,11 +36,12 @@ const userSchema = new Schema<IUser>(
     },
     isActive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
@@ -42,7 +50,7 @@ userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
     // hash the password
-    user.password = await bcrypt.hash(user.password, 10);
+    user.password = await bcrypt.hash(user.password, 8);
   }
   next();
 });
