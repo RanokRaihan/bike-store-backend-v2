@@ -5,14 +5,14 @@ import validateRequest from "../../middleware/validateRequest";
 import { upload } from "../../utils/handleImageUpload";
 import {
   createProductController,
-  deleteSingleBike,
-  getAllBikes,
-  getSingleBike,
+  deleteProductController,
+  getAllProductController,
+  getSingleProductController,
   insertManyBikes,
-  updateBike,
+  updateProductController,
 } from "./product.controller";
 import { modifyAsNumber } from "./product.middleware";
-import { createProductSchema } from "./product.validation";
+import { createProductSchema, updateProductSchema } from "./product.validation";
 
 const productRouter = Router();
 
@@ -28,16 +28,28 @@ productRouter.post(
 );
 
 // get all bike data
-productRouter.get("/", getAllBikes);
+productRouter.get("/", getAllProductController);
 
 // get a single bike data
-productRouter.get("/:productId", getSingleBike);
+productRouter.get("/:productId", getSingleProductController);
 
 // update a bike data
-productRouter.put("/:productId", updateBike);
+productRouter.put(
+  "/:productId",
+  auth,
+  authorize(["admin"]),
+
+  validateRequest(updateProductSchema),
+  updateProductController
+);
 
 //delete a bike data
-productRouter.delete("/:productId", deleteSingleBike);
+productRouter.delete(
+  "/:productId",
+  auth,
+  authorize(["admin"]),
+  deleteProductController
+);
 //
 
 //TEMP: Add this line to the end of the file

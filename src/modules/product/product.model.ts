@@ -84,6 +84,14 @@ productSchema.pre<IProduct>("save", function (next) {
 
   next();
 });
+productSchema.pre<IProduct>("updateOne", function (next) {
+  this.inStock = this.quantity > 0;
+  this.salePrice = this.discount
+    ? Math.round((this.price - (this.price * this.discount) / 100) * 100) / 100
+    : this.price;
+
+  next();
+});
 
 //update inStock status before updating the document
 productSchema.pre("findOneAndUpdate", function (next) {
@@ -98,7 +106,29 @@ productSchema.pre("findOneAndUpdate", function (next) {
     this.setUpdate(update);
   }
 
+  // if (update.price !== undefined || update.discount !== undefined) {
+  //   const price = update.price !== undefined ? update.price : this.get("price");
+  //   const discount =
+  //     update.discount !== undefined ? update.discount : this.get("discount");
+
+  //   console.log({ price, discount: this.get("discount") });
+
+  //   update.salePrice = discount
+  //     ? Math.round((price - (price * discount) / 100) * 100) / 100
+  //     : price;
+  //   this.setUpdate(update);
+  // }
+
   next();
+});
+
+productSchema.post("findOneAndUpdate", async function (doc: IProduct) {
+  if (doc) {
+    doc.salePrice = doc.discount
+      ? Math.round((doc.price - (doc.price * doc.discount) / 100) * 100) / 100
+      : doc.price;
+    await doc.save();
+  }
 });
 
 const Product = model("Product", productSchema);

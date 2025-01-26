@@ -1,4 +1,5 @@
 export interface IProduct {
+  save(): unknown;
   model: string;
   brand: string;
   price: number;

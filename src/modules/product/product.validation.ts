@@ -16,3 +16,16 @@ export const createProductSchema = z.object({
     })
     .strict(),
 });
+export const updateProductSchema = z.object({
+  body: z
+    .object({
+      brand: z.string().optional(),
+      model: z.string().optional(),
+      description: z.string().optional(),
+      price: z.number().optional(),
+      discount: z.number().optional(),
+      category: bikeCategoriesEnum.optional(),
+      quantity: z.number().optional(),
+    })
+    .strict(),
+});
