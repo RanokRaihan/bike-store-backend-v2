@@ -1,99 +1,188 @@
 import { NextFunction, Request, Response } from "express";
-import { getSingleBikeFromDb } from "../product/product.service";
+import mongoose from "mongoose";
+import AppError from "../../errors/ApiError";
+import { asyncHandler } from "../../utils/asyncHandler";
+import { sendResponse } from "../../utils/sendResponse";
+import Product from "../product/product.model";
+import { IOrder } from "./order.interface";
 import {
-  calculateTotalRevenue,
   createOrderToDb,
+  getCustomerOrdersFromDb,
   getOrdersFromDb,
+  updateOrderInDb,
 } from "./order.service";
+import { orderUtils } from "./order.utils";
 
-export const getAllOrders = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const orders = await getOrdersFromDb();
-    res.status(200).json({
-      message: "All orders fetched successfully",
-      success: true,
-      data: orders,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+export const placeOrderController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const products = req.body?.products;
+    const user = req.user;
+    const client_ip = req.ip;
 
-export const placeOrder = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const order = req.body;
+    console.log({ products, user, client_ip });
 
-    // check if the product exists
-    const product = await getSingleBikeFromDb(order?.product);
-    if (!product) {
-      res.status(404).json({
-        message: "Order placing failed. Product not found!",
-        success: false,
-        data: null,
-      });
-      return;
+    if (!products?.length) {
+      throw new AppError(400, "Order is not specified");
     }
-    // calculate the total price
-    order.totalPrice = order.quantity * product.price;
+    let totalPrice = req.body?.shippingCharge || 0;
+    const productDetails = await Promise.all(
+      products.map(async (item: { product: string; quantity: number }) => {
+        const product = await Product.findById(item.product);
+        if (product) {
+          //todo: check if product is available in stock
+          if (product.quantity === 0) {
+            throw new AppError(
+              400,
+              `Order placing failed. ${product.brand} ${product.model} is out of stock!`
+            );
+          }
+          if (product.quantity < item.quantity) {
+            throw new AppError(
+              400,
+              `order placing failed. ${product.quantity} ${product.brand} ${product.model} is not in stock.  Only ${product.quantity}  left in stock!`
+            );
+          }
+          const subtotal = product ? (product.price || 0) * item.quantity : 0;
+          totalPrice += subtotal;
+          return { ...item, salePrice: product.price };
+        } else {
+          throw new AppError(404, "Product not found");
+        }
+      })
+    );
 
-    // check if the product is in stock
-    if (product.quantity < order.quantity) {
-      if (product.quantity === 0) {
-        throw new Error("Order placing failed. Product is out of stock!");
-      }
-      throw new Error(
-        `order placing failed. ${order.quantity} bike is not in stock.  Only ${product.quantity} bike left in stock!`
+    console.log({ productDetails });
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      // Update stock
+      await Promise.all(
+        productDetails.map(async (item) => {
+          await Product.findByIdAndUpdate(
+            item.product,
+            { $inc: { quantity: -item.quantity } },
+            { session }
+          );
+        })
       );
-    }
 
-    // create the order
-    const newOrder = await createOrderToDb(order);
-    if (!newOrder) {
-      throw new Error("Order placing failed");
-    }
+      // Create order
+      const orderPayload = {
+        user: user._id,
+        products: productDetails,
+        totalPrice,
+        shippingCharge: req.body?.shippingCharge || 0,
+        shippingAddress: req.body?.address,
+      } as IOrder;
+      let order = await createOrderToDb(orderPayload);
 
-    // update the product quantity
-    product.quantity -= order.quantity;
-    if (product.quantity === 0) {
-      product.inStock = false;
-    }
-    const updatedProduct = await product.save();
-    if (!updatedProduct) {
-      throw new Error("Order placing failed");
-    }
+      // payment integration
+      const shurjopayPayload = {
+        amount: totalPrice,
+        order_id: order._id,
+        currency: "BDT",
+        customer_name: req.body?.address?.fullName || user.name,
+        customer_address: req.body?.address.address1,
+        customer_email: user.email,
+        customer_phone: req.body?.address.address1,
+        customer_city: req.body?.address.address1,
+        client_ip,
+      };
+      const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
+      let updatedOrder;
+      if (payment?.transactionStatus) {
+        updatedOrder = await updateOrderInDb(
+          { _id: order._id.toString() },
+          {
+            transaction: {
+              id: payment.sp_order_id,
+              transactionStatus: payment.transactionStatus,
+            },
+          }
+        );
+      } else {
+        throw new AppError(500, "payment initiate failed");
+      }
+      await session.commitTransaction();
+      session.endSession();
 
-    res.status(201).json({
-      message: "Order placed successfully!",
-      success: true,
-      data: newOrder,
-    });
-  } catch (error) {
-    next(error);
+      sendResponse(res, 201, "order placed successfully", {
+        updatedOrder,
+        checkout_url: payment.checkout_url,
+      });
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      next(error);
+    }
   }
-};
+);
 
-// calculate total revenue
-export const getTotalRevenue = async (
+// veryfy payment
+export const verifyPaymentController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const order_id = req.query?.order_id;
+    console.log({ params: req.params });
+
+    const verifiedPayment = await orderUtils.verifyPaymentAsync(
+      order_id as string
+    );
+
+    let finalOrder;
+    if (verifiedPayment.length) {
+      finalOrder = await updateOrderInDb(
+        {
+          "transaction.id": order_id,
+        },
+        {
+          "transaction.bank_status": verifiedPayment[0].bank_status,
+          "transaction.sp_code": verifiedPayment[0].sp_code,
+          "transaction.sp_message": verifiedPayment[0].sp_message,
+          "transaction.transactionStatus":
+            verifiedPayment[0].transaction_status,
+          "transaction.method": verifiedPayment[0].method,
+          "transaction.date_time": verifiedPayment[0].date_time,
+          status:
+            verifiedPayment[0].bank_status == "Success"
+              ? "Paid"
+              : verifiedPayment[0].bank_status == "Failed"
+              ? "Pending"
+              : verifiedPayment[0].bank_status == "Cancel"
+              ? "Cancelled"
+              : undefined,
+        }
+      );
+
+      if (finalOrder?._id) {
+        sendResponse(res, 200, "Payment verified successfully", finalOrder);
+      } else {
+        throw new AppError(500, "Payment verification failed mongo");
+      }
+    } else {
+      throw new AppError(500, "Payment verification failed surjo");
+    }
+  }
+);
+
+export const getAllOrderController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const totalRevenue = await calculateTotalRevenue();
-    res.status(200).json({
-      message: "Total revenue fetched successfully!",
-      success: true,
-      data: totalRevenue,
-    });
+    const orders = await getOrdersFromDb(req.query);
+    sendResponse(res, 200, "Orders fetched successfully", orders);
   } catch (error) {
     next(error);
   }
 };
+
+export const getAllCustomerOrderController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    const orders = await getCustomerOrdersFromDb(req.query, user._id);
+    sendResponse(res, 200, "Orders fetched successfully", orders);
+  }
+);

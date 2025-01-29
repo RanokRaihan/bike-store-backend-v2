@@ -11,3 +11,13 @@ export const loginUserSchema = z.object({
     })
     .strict(),
 });
+
+export const changePasswordSchema = z.object({
+  body: z
+    .object({
+      email: z.string().email(),
+      oldPassword: z.string(),
+      newPassword: z.string(),
+    })
+    .strict(),
+});

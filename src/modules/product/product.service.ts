@@ -1,3 +1,9 @@
+import { ObjectId } from "mongoose";
+import QueryBuilder from "../../builder/queryBuilder";
+import {
+  productFilterableFields,
+  productSearchableFields,
+} from "./product.constant";
 import { IProduct } from "./product.interface";
 import Product from "./product.model";
 
@@ -13,17 +19,24 @@ export const createProductToDb = async (product: IProduct) => {
 };
 
 //get all the bikes from the database
-export const getAllProductsFromDb = async () => {
+export const getAllProductsFromDb = async (query: Record<string, unknown>) => {
   try {
-    const products = await Product.find();
-    return products;
+    const productQuery = new QueryBuilder(Product.find(), query)
+      .search(productSearchableFields)
+      .filter(productFilterableFields)
+      .sort()
+      .paginate();
+
+    const result = await productQuery.modelQuery;
+    const meta = await productQuery.countTotal();
+    return { result, meta };
   } catch (error) {
     throw error;
   }
 };
 
 //get a single bike from the database
-export const getSingleBikeFromDb = async (id: string) => {
+export const getSingleBikeFromDb = async (id: string | ObjectId) => {
   try {
     const bike = await Product.findById(id);
     return bike;

@@ -19,4 +19,11 @@ export const {
   CLOUDINARY_CLOUD_NAME: cloudinary_cloud_name,
   CLOUDINARY_API_KEY: cloudinary_api_key,
   CLOUDINARY_API_SECRET: cloudinary_api_secret,
+
+  SP_ENDPOINT: sp_endpoint,
+  SP_USERNAME: sp_username,
+  SP_PASSWORD: sp_password,
+
+  SP_PREFIX: sp_prefix,
+  SP_RETURN_URL: sp_return_url,
 } = process.env;

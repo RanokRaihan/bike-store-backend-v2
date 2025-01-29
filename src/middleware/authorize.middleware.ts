@@ -7,7 +7,10 @@ export const authorize = (roles: TUserRole[]) => {
   return asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
       const user = req.user;
+
       if (!user) {
+        console.log("User not found");
+
         throw new ApiError(401, "You are not authorized !");
       }
       if (!roles.includes(user.role)) {

@@ -1,61 +1,61 @@
+import QueryBuilder from "../../builder/queryBuilder";
+import { OrderFilterableFields } from "./order.constant";
 import { IOrder } from "./order.interface";
 import { Order } from "./order.model";
-
-export const getOrdersFromDb = async (): Promise<IOrder[]> => {
-  try {
-    return Order.find()
-      .populate({
-        path: "product",
-        select: "-createdAt -updatedAt -__v",
-      })
-      .exec();
-  } catch (error) {
-    throw error;
-  }
-};
-
 // create an order
-export const createOrderToDb = async (order: IOrder): Promise<IOrder> => {
+export const createOrderToDb = async (order: IOrder) => {
   try {
-    const newOrder = new Order(order);
-    return newOrder.save();
+    const newOrder = await Order.create(order);
+    return newOrder;
   } catch (error) {
     throw error;
   }
 };
 
-//caculate total revenue from orders
+// update an order
+export const updateOrderInDb = async (matchfield: any, updateData: any) => {
+  console.log({ matchfield, updateData });
 
-export const calculateTotalRevenue = async (): Promise<any> => {
   try {
-    const response = await Order.aggregate([
-      {
-        $lookup: {
-          from: "products",
-          localField: "product",
-          foreignField: "_id",
-          as: "bike",
-        },
-      },
-      {
-        $unwind: "$bike",
-      },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: {
-            $sum: { $multiply: ["$bike.price", "$quantity"] },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          totalRevenue: 1,
-        },
-      },
-    ]);
-    return response[0];
+    const updatedOrder = await Order.findOneAndUpdate(matchfield, updateData, {
+      new: true,
+    });
+    return updatedOrder;
+  } catch (error) {
+    throw error;
+  }
+};
+// get all orders from the database
+export const getOrdersFromDb = async (query: Record<string, unknown>) => {
+  try {
+    const orderQuery = new QueryBuilder(Order.find(), query)
+      .filter(OrderFilterableFields)
+      .sort()
+      .paginate();
+    const result = await orderQuery.modelQuery.populate(
+      "products.product user"
+    );
+    const meta = await orderQuery.countTotal();
+    return { result, meta };
+  } catch (error) {
+    throw error;
+  }
+};
+// get all orders from the database
+export const getCustomerOrdersFromDb = async (
+  query: Record<string, unknown>,
+  userId: string
+) => {
+  try {
+    const orderQuery = new QueryBuilder(Order.find({ user: userId }), query)
+      .filter(OrderFilterableFields)
+      .sort()
+      .paginate();
+    const result = await orderQuery.modelQuery.populate(
+      "products.product user"
+    );
+    const meta = await orderQuery.countTotal();
+    return { result, meta };
   } catch (error) {
     throw error;
   }

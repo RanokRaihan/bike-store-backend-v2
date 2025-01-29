@@ -43,9 +43,15 @@ export const createProductController = asyncHandler(
 //get all bikes
 export const getAllProductController = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const bikes = await getAllProductsFromDb();
+    const result = await getAllProductsFromDb(req.query);
     //send the response
-    sendResponse(res, 200, "Bikes fetched successfully", bikes);
+    sendResponse(
+      res,
+      200,
+      "Bikes fetched successfully",
+      result.result,
+      result.meta
+    );
   }
 );
 
