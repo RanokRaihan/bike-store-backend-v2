@@ -79,9 +79,10 @@ export const globalErrorHandler: ErrorRequestHandler = (
   if (err instanceof ApiError) {
     statusCode = err.statusCode;
     message = err.message;
+
     errorSources = [
       {
-        path: "global",
+        path: err?.path || "global",
         message: err.message,
       },
     ];

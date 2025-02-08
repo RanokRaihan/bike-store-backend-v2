@@ -25,3 +25,11 @@ export const orderValidationSchema = z
       .strict(),
   })
   .strict();
+
+export const updateOrderStatusSchema = z
+  .object({
+    body: z.object({
+      status: z.string().nonempty("Status is required"),
+    }),
+  })
+  .strict();

@@ -84,6 +84,16 @@ productSchema.pre<IProduct>("save", function (next) {
 
   next();
 });
+productSchema.pre<IProduct>("insertMany", function (next, docs) {
+  docs.forEach((doc: IProduct) => {
+    doc.inStock = doc.quantity > 0;
+    doc.salePrice = doc.discount
+      ? Math.round((doc.price - (doc.price * doc.discount) / 100) * 100) / 100
+      : doc.price;
+  });
+  next();
+});
+
 productSchema.pre<IProduct>("updateOne", function (next) {
   this.inStock = this.quantity > 0;
   this.salePrice = this.discount

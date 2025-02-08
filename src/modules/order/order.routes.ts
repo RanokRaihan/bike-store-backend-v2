@@ -6,9 +6,13 @@ import {
   getAllCustomerOrderController,
   getAllOrderController,
   placeOrderController,
+  updateOrderStatusController,
   verifyPaymentController,
 } from "./order.controller";
-import { orderValidationSchema } from "./order.validation";
+import {
+  orderValidationSchema,
+  updateOrderStatusSchema,
+} from "./order.validation";
 
 const router = Router();
 
@@ -29,11 +33,18 @@ router.post(
   validateRequest(orderValidationSchema),
   placeOrderController
 );
-router.patch(
+router.get(
   "/verify-payment",
   auth,
   authorize(["customer"]),
   verifyPaymentController
+);
+router.patch(
+  "/update-order-status/:order_id",
+  auth,
+  authorize(["admin"]),
+  validateRequest(updateOrderStatusSchema),
+  updateOrderStatusController
 );
 
 export default router;

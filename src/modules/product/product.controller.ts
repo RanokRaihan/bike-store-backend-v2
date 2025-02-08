@@ -9,6 +9,9 @@ import {
   createProductToDb,
   deleteSingleBikeFromDb,
   getAllProductsFromDb,
+  getDbInsightService,
+  getFeaturedProductFromDb,
+  getRelatedProductFromDb,
   getSingleBikeFromDb,
   insertManyBikesToDb,
   updateBikeToDb,
@@ -55,6 +58,28 @@ export const getAllProductController = asyncHandler(
   }
 );
 
+//get featured bikes
+export const getFeaturedProductController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const featuredBikes = await getFeaturedProductFromDb();
+    //send the response
+    sendResponse(
+      res,
+      200,
+      "Featured bikes fetched successfully",
+      featuredBikes
+    );
+  }
+);
+
+export const getRelatedProductController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { productId } = req.params;
+    const relatedBikes = await getRelatedProductFromDb(productId);
+    //send the response
+    sendResponse(res, 200, "Related bikes fetched successfully", relatedBikes);
+  }
+);
 // get a single bike
 export const getSingleProductController = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -163,3 +188,12 @@ export const insertManyBikes = async (
     next(error);
   }
 };
+
+//temp
+export const getInsightController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const data = await getDbInsightService();
+    //send the response
+    sendResponse(res, 200, "Database insight fetched successfully", data);
+  }
+);

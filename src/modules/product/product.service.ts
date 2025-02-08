@@ -1,5 +1,7 @@
 import { ObjectId } from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
+import { Order } from "../order/order.model";
+import User from "../user/user.model";
 import {
   productFilterableFields,
   productSearchableFields,
@@ -30,6 +32,49 @@ export const getAllProductsFromDb = async (query: Record<string, unknown>) => {
     const result = await productQuery.modelQuery;
     const meta = await productQuery.countTotal();
     return { result, meta };
+  } catch (error) {
+    throw error;
+  }
+};
+export const getFeaturedProductFromDb = async () => {
+  try {
+    /*
+    TODO: Implement the logic to get featured products
+    const productQuery = await Product.find({ isFeatured: true })
+      .sort({ createdAt: -1 })
+      .limit(4);
+//*/
+
+    const highestPriceProducts = await Product.find()
+      .sort({ price: -1 })
+      .limit(2);
+
+    const lowestPriceProducts = await Product.find({
+      _id: { $nin: highestPriceProducts.map((product) => product._id) },
+    })
+      .sort({ price: 1 })
+      .limit(2);
+
+    const result = [...highestPriceProducts, ...lowestPriceProducts];
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getRelatedProductFromDb = async (id: string) => {
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    const relatedProducts = await Product.find({
+      category: product.category,
+      _id: { $ne: id },
+    }).limit(4);
+    console.log({ relatedProducts });
+    return relatedProducts;
   } catch (error) {
     throw error;
   }
@@ -79,6 +124,69 @@ export const insertManyBikesToDb = async (bikes: IProduct[]) => {
   try {
     const insertedBikes = await Product.insertMany(bikes);
     return insertedBikes;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// get all db insight
+
+export const getDbInsightService = async () => {
+  try {
+    const totalBikes = await Product.countDocuments();
+    const totalBrands = await Product.distinct("brand");
+    const totalCategories = await Product.distinct("category");
+    const totalInStock = await Product.countDocuments({ inStock: true });
+    const totalOutStock = await Product.countDocuments({ inStock: false });
+
+    // get user insight
+    const totalUsers = await User.countDocuments();
+    const totalAdmins = await User.countDocuments({ role: "admin" });
+    const totalCustomers = await User.countDocuments({ role: "customer" });
+    const totalActiveUsers = await User.countDocuments({ isActive: true });
+    const totalInactiveUsers = await User.countDocuments({ isActive: false });
+
+    // get order insight
+
+    const totalOrders = await Order.countDocuments();
+    const totalPendingOrders = await Order.countDocuments({
+      status: "Pending",
+    });
+    const totalDeliveredOrders = await Order.countDocuments({
+      status: "Delivered",
+    });
+    const totalCancelledOrders = await Order.countDocuments({
+      status: "Cancelled",
+    });
+    const totalPaidOrders = await Order.countDocuments({ status: "Paid" });
+    const totalProcessingOrders = await Order.countDocuments({
+      status: "Processing",
+    });
+
+    return {
+      userInsight: {
+        totalUsers,
+        totalAdmins,
+        totalCustomers,
+        totalActiveUsers,
+        totalInactiveUsers,
+      },
+      productInsight: {
+        totalBikes,
+        totalBrands,
+        totalCategories,
+        totalInStock,
+        totalOutStock,
+      },
+      orderInsight: {
+        totalOrders,
+        totalPendingOrders,
+        totalDeliveredOrders,
+        totalCancelledOrders,
+        totalPaidOrders,
+        totalProcessingOrders,
+      },
+    };
   } catch (error) {
     throw error;
   }

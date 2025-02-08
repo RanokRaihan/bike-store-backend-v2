@@ -42,12 +42,12 @@ class QueryBuilder<T> {
 
     const minPrice = this.query.minPrice;
     const maxPrice = this.query.maxPrice;
-
+    // console.log({ minPrice, maxPrice });
     if (minPrice || maxPrice) {
       this.modelQuery = this.modelQuery.find({
-        price: {
-          ...(minPrice && { $gte: minPrice }),
-          ...(maxPrice && { $lte: maxPrice }),
+        salePrice: {
+          ...(minPrice && { $gte: Number(minPrice) }),
+          ...(maxPrice && { $lte: Number(maxPrice) }),
         },
       });
     }
@@ -65,8 +65,8 @@ class QueryBuilder<T> {
 
   // Applies pagination based on query parameters.
   paginate() {
-    const page = parseInt(this.query.page, 10) || 1;
-    const limit = parseInt(this.query.limit, 10) || 10;
+    const page = parseInt(this?.query?.page, 10) || 1;
+    const limit = parseInt(this?.query?.limit, 10) || 6;
     const skip = (page - 1) * limit;
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
@@ -77,7 +77,7 @@ class QueryBuilder<T> {
     const totalQueries = this.modelQuery.getFilter();
     const total = await this.modelQuery.model.countDocuments(totalQueries);
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(this?.query?.limit) || 10;
+    const limit = Number(this?.query?.limit) || 6;
     const totalPage = Math.ceil(total / limit);
 
     return {
@@ -88,8 +88,11 @@ class QueryBuilder<T> {
     };
   }
 
-  build() {
-    return this.modelQuery;
+  fields(fields: string) {
+    if (fields) {
+      this.modelQuery = this.modelQuery.select(fields);
+    }
+    return this;
   }
 }
 

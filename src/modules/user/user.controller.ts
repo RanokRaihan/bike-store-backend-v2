@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import ApiError from "../../errors/ApiError";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { sendResponse } from "../../utils/sendResponse";
-import { createUserService, findUserWithEmailService } from "./user.service";
+import {
+  createUserService,
+  findUserWithEmailService,
+  getAllUsersService,
+  toggleUserStatusService,
+} from "./user.service";
 
 export const createUserController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -13,7 +18,7 @@ export const createUserController = asyncHandler(
     const existingUser = await findUserWithEmailService(email);
     // if exists, send error response
     if (existingUser) {
-      throw new ApiError(400, "User already exists with this email!");
+      throw new ApiError(400, "User already exists with this email!", "email");
     }
 
     // else, create the user with authService
@@ -31,5 +36,24 @@ export const createUserController = asyncHandler(
     };
     // send success response
     sendResponse(res, 201, "User registered successfully!", responseData);
+  }
+);
+
+export const getAllUserController = asyncHandler(
+  async (req: Request, res: Response) => {
+    // get all users from the database
+    const users = await getAllUsersService(req.query);
+    // send success response
+    sendResponse(res, 200, "All users fetched successfully!", users);
+  }
+);
+
+export const toggleUserStatusController = asyncHandler(
+  async (req: Request, res: Response) => {
+    // get the user id from the request params
+    const { id } = req.params;
+    const user = await toggleUserStatusService(id);
+    // send success response
+    sendResponse(res, 200, "User status updated successfully!", user);
   }
 );

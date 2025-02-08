@@ -7,6 +7,8 @@ import {
   createProductController,
   deleteProductController,
   getAllProductController,
+  getFeaturedProductController,
+  getRelatedProductController,
   getSingleProductController,
   insertManyBikes,
   updateProductController,
@@ -29,6 +31,8 @@ productRouter.post(
 
 // get all bike data
 productRouter.get("/", getAllProductController);
+productRouter.get("/featured", getFeaturedProductController);
+productRouter.get("/related/:productId", getRelatedProductController);
 
 // get a single bike data
 productRouter.get("/:productId", getSingleProductController);
@@ -53,7 +57,8 @@ productRouter.delete(
 //
 
 //TEMP: Add this line to the end of the file
+// for testing purposes
 // insert many bikes
-productRouter.post("/insertMany", insertManyBikes);
+productRouter.post("/insert-many", insertManyBikes);
 //
 export default productRouter;

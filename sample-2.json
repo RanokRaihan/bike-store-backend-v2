@@ -1,0 +1,162 @@
+[
+  {
+    "brand": "Yamaha",
+    "model": "MT-15",
+    "price": 220000,
+    "discount": 5,
+    "category": "Mountain",
+    "description": "The Yamaha MT-15 is a rugged mountain bike designed for off-road adventures. It features a lightweight aluminum frame, front suspension, and knobby tires for superior grip on rough terrains.",
+    "quantity": 3,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Yamaha-MT-15.png"
+  },
+  {
+    "brand": "Trek",
+    "model": "Marlin 7",
+    "price": 190000,
+    "discount": 3,
+    "category": "Mountain",
+    "description": "The Trek Marlin 7 is a versatile mountain bike with a durable frame, hydraulic disc brakes, and a smooth-shifting drivetrain, perfect for tackling trails and rough terrains.",
+    "quantity": 4,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Trek-Marlin-7.png"
+  },
+  {
+    "brand": "Giant",
+    "model": "Talon 29",
+    "price": 210000,
+    "discount": 4,
+    "category": "Mountain",
+    "description": "The Giant Talon 29 is a high-performance mountain bike with 29-inch wheels, a lightweight aluminum frame, and advanced suspension for smooth off-road rides.",
+    "quantity": 2,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Giant-Talon-29.png"
+  },
+  {
+    "brand": "Cannondale",
+    "model": "Trail 8",
+    "price": 180000,
+    "discount": 2,
+    "category": "Mountain",
+    "description": "The Cannondale Trail 8 is an entry-level mountain bike with a durable frame, front suspension, and reliable components for beginners and casual riders.",
+    "quantity": 5,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Cannondale-Trail-8.png"
+  },
+  {
+    "brand": "Specialized",
+    "model": "Allez Sprint",
+    "price": 250000,
+    "discount": 6,
+    "category": "Road",
+    "description": "The Specialized Allez Sprint is a lightweight road bike designed for speed and performance. It features a carbon fork, aerodynamic frame, and precision shifting.",
+    "quantity": 3,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Specialized-Allez-Sprint.png"
+  },
+  {
+    "brand": "Bianchi",
+    "model": "Oltre XR4",
+    "price": 300000,
+    "discount": 5,
+    "category": "Road",
+    "description": "The Bianchi Oltre XR4 is a high-end road bike with a carbon frame, integrated aerodynamics, and top-tier components for professional cyclists.",
+    "quantity": 2,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Bianchi-Oltre-XR4.png"
+  },
+  {
+    "brand": "Pinarello",
+    "model": "Dogma F12",
+    "price": 350000,
+    "discount": 7,
+    "category": "Road",
+    "description": "The Pinarello Dogma F12 is a premium road bike with a carbon frame, advanced aerodynamics, and cutting-edge technology for ultimate performance.",
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Pinarello-Dogma-F12.png"
+  },
+  {
+    "brand": "Cervelo",
+    "model": "S5",
+    "price": 320000,
+    "discount": 4,
+    "category": "Road",
+    "description": "The Cervelo S5 is an aerodynamic road bike designed for speed and efficiency. It features a carbon frame, integrated cockpit, and high-performance components.",
+    "quantity": 2,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Cervelo-S5.png"
+  },
+  {
+    "brand": "Specialized",
+    "model": "Sirrus X 4.0",
+    "price": 180000,
+    "discount": 4,
+    "category": "Hybrid",
+    "description": "The Sirrus X 4.0 from Specialized is a fitness hybrid bike with lightweight carbon forks, designed for smooth rides on both paved and gravel roads.",
+    "quantity": 2,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Specialized-Sirrus-X-4.0.png"
+  },
+  {
+    "brand": "Cannondale",
+    "model": "Quick CX 3",
+    "price": 170000,
+    "discount": 3,
+    "category": "Hybrid",
+    "description": "The Cannondale Quick CX 3 is a versatile hybrid bike with a lightweight frame, wide tires, and a comfortable riding position for urban and light trail use.",
+    "quantity": 4,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Cannondale-Quick-CX-3.png"
+  },
+  {
+    "brand": "Trek",
+    "model": "FX 3",
+    "price": 160000,
+    "discount": 2,
+    "category": "Hybrid",
+    "description": "The Trek FX 3 is a fitness hybrid bike with a lightweight aluminum frame, carbon fork, and ergonomic design for comfortable long-distance rides.",
+    "quantity": 3,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Trek-FX-3.png"
+  },
+  {
+    "brand": "Giant",
+    "model": "Escape 2",
+    "price": 150000,
+    "discount": 1,
+    "category": "Hybrid",
+    "description": "The Giant Escape 2 is a reliable hybrid bike with a durable frame, upright riding position, and versatile tires for city commuting and light trails.",
+    "quantity": 5,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Giant-Escape-2.png"
+  },
+  {
+    "brand": "BMW",
+    "model": "Cruise Bike",
+    "price": 280000,
+    "discount": 5,
+    "category": "Electric",
+    "description": "The BMW Cruise Bike is a premium electric bike with a sleek design, powerful motor, and long-lasting battery for effortless urban commuting.",
+    "quantity": 2,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/BMW-Cruise-Bike.png"
+  },
+  {
+    "brand": "Trek",
+    "model": "Powerfly 5",
+    "price": 260000,
+    "discount": 4,
+    "category": "Electric",
+    "description": "The Trek Powerfly 5 is an electric mountain bike with a robust frame, powerful motor, and advanced suspension for tackling challenging trails.",
+    "quantity": 3,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Trek-Powerfly-5.png"
+  },
+  {
+    "brand": "Specialized",
+    "model": "Turbo Vado SL",
+    "price": 240000,
+    "discount": 3,
+    "category": "Electric",
+    "description": "The Specialized Turbo Vado SL is a lightweight electric bike with a sleek design, long-range battery, and smooth motor assistance for urban rides.",
+    "quantity": 4,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Specialized-Turbo-Vado-SL.png"
+  },
+  {
+    "brand": "Giant",
+    "model": "Explore E+",
+    "price": 230000,
+    "discount": 2,
+    "category": "Electric",
+    "description": "The Giant Explore E+ is an electric hybrid bike with a comfortable frame, powerful motor, and versatile tires for city and light trail use.",
+    "quantity": 3,
+    "image": "https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Giant-Explore-E+.png"
+  }
+]

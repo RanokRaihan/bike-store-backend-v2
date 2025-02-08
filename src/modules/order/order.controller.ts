@@ -158,10 +158,10 @@ export const verifyPaymentController = asyncHandler(
       if (finalOrder?._id) {
         sendResponse(res, 200, "Payment verified successfully", finalOrder);
       } else {
-        throw new AppError(500, "Payment verification failed mongo");
+        throw new AppError(500, "Payment verification failed ");
       }
     } else {
-      throw new AppError(500, "Payment verification failed surjo");
+      throw new AppError(500, "Payment verification failed ");
     }
   }
 );
@@ -184,5 +184,17 @@ export const getAllCustomerOrderController = asyncHandler(
     const user = req.user;
     const orders = await getCustomerOrdersFromDb(req.query, user._id);
     sendResponse(res, 200, "Orders fetched successfully", orders);
+  }
+);
+
+export const updateOrderStatusController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const order_id = req.params?.order_id;
+    const status = req.body?.status;
+    const updatedOrder = await updateOrderInDb(
+      { _id: order_id as string },
+      { status }
+    );
+    sendResponse(res, 200, "Order status updated successfully", updatedOrder);
   }
 );

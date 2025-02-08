@@ -31,6 +31,7 @@ export const loginUserController = asyncHandler(
     }
     // else, create a token and send the token as response
     const jwtPayload: IjwtPayload = {
+      name: user.name,
       _id: user._id,
       email: user.email,
       role: user.role as TUserRole,

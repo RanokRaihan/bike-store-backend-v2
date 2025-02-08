@@ -9,7 +9,17 @@ const app: Application = express();
 // Express configuration
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
+// CORS
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://bike-store-three-chi.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 // all routes
 app.use("/api/v1", router);

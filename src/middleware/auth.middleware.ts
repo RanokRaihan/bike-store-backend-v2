@@ -9,6 +9,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 export const auth = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers?.authorization?.split(" ")[1];
+
     if (!token) {
       throw new ApiError(401, "you are not authorized!");
     }
