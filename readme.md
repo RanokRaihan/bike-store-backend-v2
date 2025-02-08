@@ -1,62 +1,41 @@
-# Blog App Backend
+# Bike Store Backend v2
 
-This is the backend for the Blog App. It provides APIs for managing blog posts, comments, and users.
+This is the backend for the Bike Store application. It provides a RESTful API for managing bikes, customers, and orders.
 
-## Live link
+## Installation Guide
 
-You can access the live application [here](https://blog-app-backend-ten-fawn.vercel.app/).
+### Prerequisites
 
-## Table of Contents
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- MongoDB
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
+### Steps
 
-## Installation
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/RanokRaihan/bike-store-backend-v2.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd bike-store-backend-v2
+   ```
+3. Install the dependencies:
+   ```sh
+   npm install
+   ```
+4. Create a `.env` file in the root directory and add the following environment variables:
+   ```
+   PORT=3000
+   MONGODB_URI=mongodb://localhost:27017/bikestore
+   ```
+5. Start the server:
+   ```sh
+   npm start
+   ```
 
-Clone the repository:
-
-```bash
-git clone https://github.com/RanokRaihan/blog-app-backend.git
-```
-
-Navigate to the project directory:
-
-```bash
-cd blog-app-backend
-```
-
-To install the dependencies, run:
-
-```bash
-npm install
-```
-
-## Usage
-
-To start the server, run:
-
-```bash
-npm run dev
-```
-
-The server will start on `http://localhost:3000`.
+The server should now be running on `http://localhost:3000`.
 
 ## API Endpoints
 
-### user endpoints
-
-- `POST /api/auth/register` - create a user
-- `POST /api/auth/login` - Login a user
-
-### Blog Endpoint - only for authorized user
-
-- `POST /api/blogs` - create a blog
-- `GET /api/blogs` - PUBLIC endpoint to get all blog with search, sort , filter
-- `PATCH /api/blogs/:id` - Update a blog by ID
-- `DELETE /api/blogs/:id` - Delete a blog by ID
-
-### admin enpoints
-
-- `PATCH /api/admin/users/:userId/block` - admin block any user with user id
-- `DELETE /api/admin/blogs/:id` - admi Delete any blog by ID
+For detailed information about the API endpoints, please refer to the `postman.json` file included in the project. You can import this file into Postman to explore and test the available endpoints.

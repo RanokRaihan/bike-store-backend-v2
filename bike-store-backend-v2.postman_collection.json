@@ -1,0 +1,509 @@
+{
+	"info": {
+		"_postman_id": "7d1dcddb-82cf-41ea-86ae-c3229224f00e",
+		"name": "bike-store-backend-v2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33198516"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ranok@gmail.com\",\n    \"password\": \"admin321\"\n}\n// {\n// \"email\": \"mozid@gmail.com\",\n//     \"password\": \"customer321\"\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/auth/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "change password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//     \"email\": \"ranok@gmail.com\",\n//     \"password\": \"admin321\"\n// }\n{\n    \"email\": \"mozid@gmail.com\",\n    \"oldPassword\": \"customer123\",\n    \"newPassword\":\"customer321\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/auth/change-password"
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bike-base-url}}/auth/refresh-token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Mozid\",\n    \"email\":\"mozid@gmail.com\",\n    \"password\":\"customer123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/users/register"
+					},
+					"response": []
+				},
+				{
+					"name": "get all users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{bike-base-url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "toggle status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"67952a827ef13f01fb9229e1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/users/toggle-status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "create product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"description": "this is admin token",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/ranokraihan/Desktop/Screenshot 2025-01-27 at 8.11.03 PM.png"
+								},
+								{
+									"key": "brand",
+									"value": "Bajaz",
+									"type": "text"
+								},
+								{
+									"key": "model",
+									"value": "Pulser 150cc double disk",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "190000",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "this bike is great",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "16",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "Road",
+									"type": "text"
+								},
+								{
+									"key": "discount",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{bike-base-url}}/products/create-productfix"
+					},
+					"response": []
+				},
+				{
+					"name": "insert many",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"description": "this is admin token",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"brand\": \"Yamaha\",\n    \"model\": \"WR250F\",\n    \"price\": 280000,\n    \"discount\": 5,\n    \"category\": \"Mountain\",\n    \"description\": \"The Yamaha WR250F is a rugged off-road motorcycle designed for mountain trails and rough terrains. It features a lightweight frame, high ground clearance, and excellent suspension.\",\n    \"quantity\": 3,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Yamaha-WR250F.png\"\n  },\n  {\n    \"brand\": \"KTM\",\n    \"model\": \"EXC 350\",\n    \"price\": 320000,\n    \"discount\": 4,\n    \"category\": \"Mountain\",\n    \"description\": \"The KTM EXC 350 is a high-performance dirt bike built for mountain adventures. It features a powerful 350cc engine, advanced suspension, and off-road tires.\",\n    \"quantity\": 2,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/KTM-EXC-350.png\"\n  },\n  {\n    \"brand\": \"Honda\",\n    \"model\": \"CRF450L\",\n    \"price\": 350000,\n    \"discount\": 6,\n    \"category\": \"Mountain\",\n    \"description\": \"The Honda CRF450L is a dual-sport motorcycle designed for mountain trails and off-road adventures. It features a 450cc engine, long-travel suspension, and durable build.\",\n    \"quantity\": 4,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Honda-CRF450L.png\"\n  },\n  {\n    \"brand\": \"Suzuki\",\n    \"model\": \"DR-Z400S\",\n    \"price\": 300000,\n    \"discount\": 3,\n    \"category\": \"Mountain\",\n    \"description\": \"The Suzuki DR-Z400S is a versatile dual-sport motorcycle perfect for mountain trails. It features a 398cc engine, lightweight frame, and excellent off-road capabilities.\",\n    \"quantity\": 5,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Suzuki-DR-Z400S.png\"\n  },\n  {\n    \"brand\": \"Kawasaki\",\n    \"model\": \"Ninja 400\",\n    \"price\": 250000,\n    \"discount\": 5,\n    \"category\": \"Road\",\n    \"description\": \"The Kawasaki Ninja 400 is a sporty road motorcycle with a 399cc engine, sleek design, and excellent handling for city and highway rides.\",\n    \"quantity\": 4,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Kawasaki-Ninja-400.png\"\n  },\n  {\n    \"brand\": \"Yamaha\",\n    \"model\": \"YZF-R3\",\n    \"price\": 220000,\n    \"discount\": 4,\n    \"category\": \"Road\",\n    \"description\": \"The Yamaha YZF-R3 is a lightweight sportbike with a 321cc engine, aggressive styling, and smooth performance for road enthusiasts.\",\n    \"quantity\": 3,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Yamaha-YZF-R3.png\"\n  },\n  {\n    \"brand\": \"Honda\",\n    \"model\": \"CBR500R\",\n    \"price\": 270000,\n    \"discount\": 6,\n    \"category\": \"Road\",\n    \"description\": \"The Honda CBR500R is a sporty road motorcycle with a 471cc engine, comfortable ergonomics, and excellent fuel efficiency for daily commutes.\",\n    \"quantity\": 2,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Honda-CBR500R.png\"\n  },\n  {\n    \"brand\": \"Suzuki\",\n    \"model\": \"GSX-S750\",\n    \"price\": 320000,\n    \"discount\": 7,\n    \"category\": \"Road\",\n    \"description\": \"The Suzuki GSX-S750 is a powerful road motorcycle with a 749cc engine, sporty design, and advanced electronics for a thrilling ride.\",\n    \"quantity\": 3,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Suzuki-GSX-S750.png\"\n  },\n  {\n    \"brand\": \"Royal Enfield\",\n    \"model\": \"Himalayan\",\n    \"price\": 230000,\n    \"discount\": 4,\n    \"category\": \"Hybrid\",\n    \"description\": \"The Royal Enfield Himalayan is a versatile adventure motorcycle with a 411cc engine, rugged build, and capabilities for both on-road and off-road rides.\",\n    \"quantity\": 5,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Royal-Enfield-Himalayan.png\"\n  },\n  {\n    \"brand\": \"BMW\",\n    \"model\": \"F 850 GS\",\n    \"price\": 2800000,\n    \"discount\": 8,\n    \"category\": \"Hybrid\",\n    \"description\": \"The BMW F 850 GS is a hybrid adventure motorcycle with an 853cc engine, advanced electronics, and capabilities for both city and off-road adventures.\",\n    \"quantity\": 2,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/BMW-F850-GS.png\"\n  },\n  {\n    \"brand\": \"KTM\",\n    \"model\": \"390 Adventure\",\n    \"price\": 260000,\n    \"discount\": 5,\n    \"category\": \"Hybrid\",\n    \"description\": \"The KTM 390 Adventure is a hybrid adventure motorcycle with a 373cc engine, lightweight frame, and excellent performance for both road and trail rides.\",\n    \"quantity\": 4,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/KTM-390-Adventure.png\"\n  },\n  {\n    \"brand\": \"Triumph\",\n    \"model\": \"Tiger 900\",\n    \"price\": 3100000,\n    \"discount\": 7,\n    \"category\": \"Hybrid\",\n    \"description\": \"The Triumph Tiger 900 is a premium hybrid adventure motorcycle with an 888cc engine, advanced features, and capabilities for long-distance touring and off-roading.\",\n    \"quantity\": 3,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Triumph-Tiger-900.png\"\n  },\n  {\n    \"brand\": \"Zero\",\n    \"model\": \"SR/F\",\n    \"price\": 2800000,\n    \"discount\": 6,\n    \"category\": \"Electric\",\n    \"description\": \"The Zero SR/F is a high-performance electric motorcycle with instant torque, a sleek design, and a range of up to 200 miles on a single charge.\",\n    \"quantity\": 2,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Zero-SR-F.png\"\n  },\n  {\n    \"brand\": \"Harley-Davidson\",\n    \"model\": \"LiveWire\",\n    \"price\": 3500000,\n    \"discount\": 8,\n    \"category\": \"Electric\",\n    \"description\": \"The Harley-Davidson LiveWire is a premium electric motorcycle with a futuristic design, instant acceleration, and advanced technology for a thrilling ride.\",\n    \"quantity\": 1,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Harley-LiveWire.png\"\n  },\n  {\n    \"brand\": \"Energica\",\n    \"model\": \"Ego\",\n    \"price\": 3000000,\n    \"discount\": 5,\n    \"category\": \"Electric\",\n    \"description\": \"The Energica Ego is a high-performance electric motorcycle with a sporty design, fast charging, and a range of up to 150 miles on a single charge.\",\n    \"quantity\": 2,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Energica-Ego.png\"\n  },\n  {\n    \"brand\": \"Tesla\",\n    \"model\": \"Cyclotron\",\n    \"price\": 4000000,\n    \"discount\": 10,\n    \"category\": \"Electric\",\n    \"description\": \"The Tesla Cyclotron is a futuristic electric motorcycle with cutting-edge technology, autonomous features, and a range of up to 250 miles on a single charge.\",\n    \"quantity\": 1,\n    \"image\": \"https://res.cloudinary.com/ranokraihan/image/upload/v1738478934/bike-store/Tesla-Cyclotron.png\"\n  }\n]\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/products/insert-many"
+					},
+					"response": []
+				},
+				{
+					"name": "get all products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bike-base-url}}/products?search=The Energica Ego",
+							"host": [
+								"{{bike-base-url}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "The Energica Ego"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get featured product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bike-base-url}}/products/featured"
+					},
+					"response": []
+				},
+				{
+					"name": "get single product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bike-base-url}}/products/6795ccdc3b4e3d03db9e4489"
+					},
+					"response": []
+				},
+				{
+					"name": "update product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \n    \"quantity\":0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/products/679f1557dde12589676c08dd"
+					},
+					"response": []
+				},
+				{
+					"name": "delete product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"model\":\" fzs v3\",\n    \"quantity\":9,\n    \"discount\":20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/products/6795ccdc3b4e3d03db9e4488"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "place order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customer-token}}",
+								"description": "customer access token",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\":[\n        {\n            \"product\":\"67a034504e810ccabbea81a5\",\n            \"quantity\":1\n        }\n    ],\n    \"address\":{\n        \"fullName\":\"Ranok Raihan\",\n        \"address1\":\"peyaratola mor , kushtia shadar\",\n        \"postalCode\":\"7000\",\n        \"phone\":\"6106090969\",\n        \"city\":\"Kushtia\",\n        \"country\":\"Bangladesh\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bike-base-url}}/orders/place-order"
+					},
+					"response": []
+				},
+				{
+					"name": "verify-payment",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customer-token}}",
+								"description": "customer access token",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{bike-base-url}}/orders/verify-payment?order_id=SP67999a31c4db2",
+							"host": [
+								"{{bike-base-url}}"
+							],
+							"path": [
+								"orders",
+								"verify-payment"
+							],
+							"query": [
+								{
+									"key": "order_id",
+									"value": "SP67999a31c4db2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{bike-base-url}}/orders"
+					},
+					"response": []
+				},
+				{
+					"name": "get all customer order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{customer-token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{bike-base-url}}/orders/my-orders"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "get dashboard insights",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{bike-base-url}}/admin/get-insight"
+					},
+					"response": []
+				},
+				{
+					"name": "update-order-status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin-token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{bike-base-url}}/orders/update-order-status/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{bike-base-url}}"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bike-base-url",
+			"value": "https://octopus-app-eyboh.ondigitalocean.app/api/v1",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "admin-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUmFub2sgUmFpaGFuIiwiX2lkIjoiNjc5NWEyMzBhZjViMDU4MTk5NGE0Mzg5IiwiZW1haWwiOiJyYW5va0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzg4OTU0MTEsImV4cCI6MTczOTc1OTQxMX0.X-HU-v56LXGcdRMUVPf2GsPWegvhHQCezqCXez-xKBI",
+			"type": "string"
+		},
+		{
+			"key": "customer-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzk5N2Y1YzcxZTBhZjNlZTg3NGIzYzciLCJlbWFpbCI6Im1vemlkQGdtYWlsLmNvbSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTczODExMjg3NiwiZXhwIjoxNzM4OTc2ODc2fQ.M2UfakMmmTuWTkR3bb7tTykRK45O2lstwYMKijUVyMc",
+			"type": "string"
+		},
+		{
+			"key": "bike-base-url",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		}
+	]
+}
